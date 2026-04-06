@@ -1,0 +1,3174 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Baccarat Analysys BACCARAT</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+    :root{
+--player:#2ea8ff;
+--banker:#ff4d6d;
+--tie:#2ecc71;
+--gold:#ffd166;
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+.container{
+width:100%;
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+h1{
+text-align:center;
+color:#ffd166;
+margin-bottom:20px;
+font-size:28px;
+letter-spacing:2px;
+}
+
+.card{
+
+border-radius:20px;
+padding:20px;
+margin-bottom:15px;
+position:relative;
+overflow:hidden;
+
+/* พื้น premium casino */
+background:linear-gradient(
+135deg,
+#2c5364,
+#3a7bd5,
+#6a82fb
+);
+
+border:1px solid rgba(255,255,255,.15);
+
+/* เงาแบบเว็บแพง */
+box-shadow:
+0 15px 40px rgba(0,0,0,.35),
+0 0 20px rgba(58,123,213,.25);
+
+backdrop-filter:blur(12px);
+
+}
+
+
+
+@keyframes premiumShine{
+
+0%{
+transform:translateX(-100%);
+}
+
+100%{
+transform:translateX(100%);
+}
+
+}
+
+/* shimmer layer */
+.card::before{
+content:'';
+position:absolute;
+top:-50%;
+left:-50%;
+width:200%;
+height:200%;
+background:linear-gradient(
+120deg,
+transparent 40%,
+rgba(255,255,255,.12),
+transparent 60%
+);
+animation:cardShine 6s linear infinite;
+}
+
+@keyframes cardShine{
+0%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
+}
+
+
+
+/* PLAYER (ฟ้า) */
+.result-p{
+color:#2ea8ff;
+text-shadow:
+0 0 12px #2ea8ff,
+0 0 24px rgba(46,168,255,.7);
+}
+
+
+/* BANKER (แดง) */
+.result-b{
+color:#ff4d6d;
+text-shadow:
+0 0 12px #ff4d6d,
+0 0 24px rgba(255,77,109,.7);
+}
+
+
+/* WAIT (เทา) */
+.result-wait{
+color:#aaa;
+text-shadow:none;
+}
+
+.controls{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
+margin-bottom:15px;
+}
+
+.btn{
+border:none;
+border-radius:12px;
+padding:16px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+transition:.2s;
+box-shadow:0 4px 10px rgba(0,0,0,.4);
+}
+
+.btn:hover{
+transform:scale(1.05);
+}
+
+.player{
+background:#2ea8ff;
+}
+
+.banker{
+background:#ff4d6d;
+}
+
+.tie{
+background:#2ecc71;
+}
+
+.secondary{
+background:rgba(255,255,255,.15);
+}
+
+.roadmap-wrapper,.dna-wrapper{
+overflow-x:auto;
+background:rgba(0,0,0,.35);
+border-radius:8px;
+padding:6px;
+}
+
+table{
+border-collapse:collapse;
+}
+
+td{
+width:32px;
+height:32px;
+border:1px solid rgba(255,255,255,.1);
+text-align:center;
+}
+
+.dot{
+width:22px;
+height:22px;
+border-radius:50%;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+font-weight:bold;
+}
+
+.dot.P{background:#2ea8ff;}
+.dot.B{background:#ff4d6d;}
+.dot.T{background:#2ecc71;}
+
+h3{
+font-size:14px;
+margin-bottom:8px;
+color:#ffd166;
+}
+
+
+
+@keyframes glow{
+from{opacity:.8}
+to{opacity:1}
+}
+
+/* วางตรงนี้ */
+
+@keyframes pop{
+0%{transform:scale(.85);opacity:.6}
+100%{transform:scale(1);opacity:1}
+}
+
+@keyframes textFlow{
+0%{background-position:0% center}
+100%{background-position:200% center}
+}
+
+@keyframes glowPulse{
+0%{
+filter:drop-shadow(0 0 6px rgba(46,168,255,.6));
+}
+50%{
+filter:drop-shadow(0 0 20px rgba(46,168,255,1));
+}
+100%{
+filter:drop-shadow(0 0 6px rgba(46,168,255,.6));
+}
+}
+
+
+body{
+font-family:'Noto Sans Thai',sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+background-size:200% 200%;
+animation:bgmove 8s infinite alternate;
+color:white;
+min-height:100vh;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%}
+100%{background-position:100% 50%}
+}
+
+/* --------------------
+RISK ALERT PREMIUM
+-------------------- */
+
+.risk-alert{
+
+margin-bottom:15px;
+padding:16px;
+text-align:center;
+font-weight:700;
+font-size:16px;
+
+border-radius:14px;
+
+background:linear-gradient(
+90deg,
+#ff4d6d,
+#ff9f43,
+#ffd166,
+#ff4d6d
+);
+
+background-size:300% 300%;
+
+color:white;
+
+box-shadow:
+0 0 20px rgba(255,77,109,.6),
+0 0 40px rgba(255,159,67,.5);
+
+animation:
+riskGlow 2.5s ease infinite,
+riskFlow 6s linear infinite;
+
+}
+
+.hidden{
+display:none;
+}
+
+@keyframes riskGlow{
+
+0%{
+transform:scale(1);
+box-shadow:0 0 10px rgba(255,77,109,.5);
+}
+
+50%{
+transform:scale(1.04);
+box-shadow:0 0 35px rgba(255,77,109,1);
+}
+
+100%{
+transform:scale(1);
+box-shadow:0 0 10px rgba(255,77,109,.5);
+}
+
+}
+
+@keyframes riskFlow{
+
+0%{background-position:0% 50%}
+100%{background-position:100% 50%}
+
+}
+
+/* --------------------
+AI BOX (พื้นหลังหลัก)
+-------------------- */
+
+.ai-box{
+
+padding:30px 20px;
+border-radius:20px;
+
+background:linear-gradient(
+135deg,
+#1c3f4a,
+#245d6a,
+#1c3f4a
+);
+
+box-shadow:
+0 10px 40px rgba(0,0,0,0.45),
+inset 0 0 40px rgba(255,255,255,0.05);
+
+border:1px solid rgba(255,255,255,0.08);
+
+backdrop-filter: blur(10px);
+
+position:relative;
+overflow:hidden;
+
+}
+
+/* --------------------
+PREDICTION TEXT (BASE)
+-------------------- */
+
+/* --------------------
+PREDICTION RESULT TEXT
+-------------------- */
+
+.prediction-result{
+
+font-size:50px;
+font-weight:900;
+letter-spacing:3px;
+text-align:center;
+
+background-size:200% auto;
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+text-shadow:
+0 0 12px rgba(60,195,255,0.9),
+0 0 24px rgba(60,195,255,0.6);
+
+animation:glowMove 3s linear infinite;
+
+}
+
+
+/* --------------------
+RESULT COLOR
+-------------------- */
+
+.result-p{
+background-image:linear-gradient(90deg,#00e1ff,#0090ff,#003cff);
+
+text-shadow:
+0 0 12px rgba(0,200,255,1),
+0 0 24px rgba(0,140,255,.9),
+0 0 40px rgba(0,90,255,.7);
+}
+.result-b{
+background-image:linear-gradient(90deg,#ff3b3b,#ff0000,#ff1a1a);
+
+text-shadow:
+0 0 12px rgba(255,0,0,.9),
+0 0 24px rgba(255,0,0,.7),
+0 0 40px rgba(255,0,0,.5);
+}
+
+.result-wait{
+background-image:linear-gradient(90deg,#ffffff,#cfd9ff,#9aa7ff);
+
+text-shadow:
+0 0 12px rgba(255,255,255,.9),
+0 0 24px rgba(170,190,255,.8),
+0 0 40px rgba(120,140,255,.6);
+}
+
+/* --------------------
+TEXT GLOW ANIMATION
+-------------------- */
+
+@keyframes glowMove{
+
+0%{
+background-position:0%;
+}
+
+100%{
+background-position:200%;
+}
+
+}
+
+
+
+</style>
+
+</head>
+
+<body oncontextmenu="return false">
+
+    <!-- LOGIN SCREEN -->
+<div id="login-screen" style="
+position:fixed;
+inset:0;
+background:#0b1e2a;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+font-family:'Noto Sans Thai',sans-serif;
+">
+
+<div style="
+background:#132f3a;
+padding:35px;
+border-radius:16px;
+width:280px;
+text-align:center;
+box-shadow:0 0 30px rgba(0,0,0,.6);
+">
+
+<h2 style="color:#ffd166;margin-bottom:15px">LOGIN</h2>
+
+<input id="user" placeholder="User"
+style="
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.2);
+background:#000;
+color:#fff;
+font-size:16px;
+">
+
+<div style="position:relative;margin-bottom:15px">
+
+<input id="pass" type="password" placeholder="Password"
+style="
+width:100%;
+padding:12px;
+padding-right:45px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.2);
+background:#000;
+color:#fff;
+font-size:16px;
+">
+
+<span onclick="togglePass()" 
+style="
+position:absolute;
+right:12px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+font-size:18px;
+color:#aaa;
+">
+👁
+</span>
+
+</div>
+
+<button onclick="login()" style="
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#2ea8ff;
+color:white;
+font-weight:bold;
+cursor:pointer;
+font-size:16px;
+">
+LOGIN
+</button>
+
+<div id="login-error" style="color:#ff4d6d;margin-top:10px;font-size:13px"></div>
+
+</div>
+</div>
+
+<div class="container">
+
+<h1>Analysys BACCARAT</h1>
+<div style="text-align:center;color:#ffd166;font-size:13px;margin-bottom:15px">
+License Expiry : <span id="expiry-date"></span>
+</div>
+
+<div class="card">
+<div style="text-align:center;font-weight:600;color:var(--gold)">AI วิเคราะห์ และ ทำนายผล</div>
+
+<div id="prediction-result" class="prediction-result result-wait">WAIT</div>
+
+<div id="prediction-reason" style="font-size:.85rem;color:#ccc">
+ป้อนข้อมูล 3 ตาเพื่อเริ่มวิเคราะห์
+</div>
+
+<div style="margin-top:5px;font-size:.8rem">
+ไม้ <span id="betting-step-main">1</span>
+</div>
+
+</div>
+
+<!-- AI STATISTICS -->
+<div class="card">
+
+<h3 style="color:var(--gold);font-size:.9rem">
+AI STATISTICS
+</h3>
+
+<div style="display:flex;gap:15px;font-size:.9rem">
+
+<div>Step : <span id="betting-step">1</span></div>
+<div>Win : <span id="stat-win">0</span></div>
+<div>Loss : <span id="stat-loss">0</span></div>
+<div>Total : <span id="stat-total">0</span></div>
+
+</div>
+
+</div>
+
+<!-- RISK ALERT PREMIUM -->
+<div id="risk-alert" class="risk-alert hidden">
+⚠️ ตาเสี่ยงสูง AI แนะนำให้รอ
+</div>
+
+<div class="controls">
+<button class="btn player" onclick="addResult('P')">P</button>
+<button class="btn banker" onclick="addResult('B')">B</button>
+<button class="btn tie" onclick="addResult('T')">T</button>
+</div>
+
+<div class="controls">
+<button class="btn secondary" onclick="undo()">UNDO</button>
+<button class="btn secondary" onclick="resetGame()">RESET</button>
+<button class="btn secondary" onclick="toggleModal()">SIGNAL</button>
+</div>
+
+<div class="card">
+<h3 style="color:var(--gold);font-size:.9rem">HISTORY</h3>
+<div class="roadmap-wrapper">
+<table id="roadmapTable"></table>
+</div>
+</div>
+
+<div class="card">
+
+<h3 style="color:var(--gold);font-size:.9rem">
+AI ACCURACY HISTORY
+</h3>
+
+<div id="accuracyStats"></div>
+
+<div class="dna-wrapper">
+<table id="dnaTable"></table>
+</div>
+
+</div>
+
+
+<!-- 👇 วางตรงนี้ -->
+
+<div class="card">
+
+<h3 style="color:var(--gold);font-size:.9rem">
+PREDICTION PATTERN DNA
+</h3>
+
+<div id="predictionStats" style="margin-bottom:6px;font-size:.8rem;"></div>
+
+<div class="dna-wrapper">
+<table id="predictDNA"></table>
+</div>
+
+</div>
+
+
+
+
+
+<script>
+
+/* --------------------
+LOGIN SYSTEM
+-------------------- */
+
+const LICENSE = {
+user:"1234",
+pass:"1234",
+expire:"2026-04-17T23:59:59"
+};
+
+function login(){
+
+const u=document.getElementById("user").value.trim();
+const p=document.getElementById("pass").value.trim();
+const err=document.getElementById("login-error");
+
+if(u===LICENSE.user && p===LICENSE.pass){
+
+localStorage.setItem("baccarat_login","ok");
+
+document.getElementById("login-screen").style.display="none";
+
+checkExpiry();
+
+}else{
+
+err.textContent="user หรือ password ไม่ถูกต้อง";
+
+}
+
+}
+
+function checkExpiry(){
+
+const now = new Date();
+const exp = new Date(LICENSE.expire);
+
+document.getElementById("expiry-date").textContent =
+exp.toLocaleDateString("th-TH");
+
+if(now > exp){
+
+document.body.innerHTML =
+"<h1 style='color:red;text-align:center;margin-top:40px'>โปรแกรมหมดอายุ</h1>";
+
+throw new Error("EXPIRED");
+
+}
+
+}
+
+/* auto login check */
+
+window.addEventListener("load",()=>{
+
+document.getElementById("login-screen").style.display="flex";
+
+});
+
+
+
+const ROWS=6,DNA_ROWS=4,DEFAULT_COLS=12;
+const state={
+history:[],
+predictions:[],
+dna:[],
+predictDNA:[],
+patternStats:{},
+patternMemory:{},
+currentStep:1,
+maxSteps:3
+};
+
+function addResult(r){
+
+if(r === 'T'){
+state.history.push('T');
+
+if(state.history.length > 120){
+state.history.shift();
+}
+
+updateUI();
+return;
+}
+
+if(state.predictions.length && r!=='T'){
+
+const last = state.predictions.at(-1);
+
+if(last.result !== 'WAIT'){
+
+const win = last.result === r;
+
+const pattern = state.history.length >= 4
+? state.history.slice(-4).join('')
+: '';
+
+state.predictDNA.push({
+pattern,
+pred:last.result,
+real:r,
+win
+});
+
+if(state.predictDNA.length > 200){
+state.predictDNA.shift();
+}
+
+/* --------------------
+LEVEL 6 MEMORY LEARN
+-------------------- */
+
+if(pattern){
+
+if(!state.patternMemory[pattern]){
+state.patternMemory[pattern] = {P:0,B:0};
+}
+
+if(win){
+
+if(last.result === 'P'){
+state.patternMemory[pattern].P++;
+}
+
+if(last.result === 'B'){
+state.patternMemory[pattern].B++;
+}
+
+}
+
+}
+
+/* -------------------- */
+
+state.dna.push(win);
+
+if(state.dna.length > 200){
+state.dna.shift();
+}
+
+state.currentStep =
+win ? 1 :
+state.currentStep >= state.maxSteps ? 1 :
+state.currentStep + 1;
+
+}
+
+}
+
+state.history.push(r);
+
+if(state.history.length > 120){
+state.history.shift();
+}
+
+generatePrediction();
+updateUI();
+
+}
+
+function resetGame(){
+
+if(!confirm("ล้างข้อมูลทั้งหมด?"))return;
+
+state.history=[];
+state.predictions=[];
+state.dna=[];
+state.predictDNA=[];
+state.patternStats={};   // เพิ่มตรงนี้
+state.currentStep=1;
+
+updateUI();
+
+}
+
+function undo(){
+
+if(state.history.length === 0) return;
+
+state.history.pop();
+
+if(state.predictions.length){
+state.predictions.pop();
+}
+
+if(state.dna.length){
+state.dna.pop();
+}
+
+/* 👇 ต้องเพิ่มตัวนี้ */
+if(state.predictDNA.length){
+state.predictDNA.pop();
+}
+
+generatePrediction();
+updateUI();
+
+}
+
+
+
+
+function trackPattern(name, win){
+
+if(!state.patternStats[name]){
+state.patternStats[name]={win:0,loss:0};
+}
+
+if(win){
+state.patternStats[name].win++;
+}else{
+state.patternStats[name].loss++;
+}
+
+}
+
+
+
+
+
+function generatePrediction(){
+
+const history = state.history.filter(x=>x!=='T');
+
+if(history.length < 3){
+
+state.predictions.push({
+result:'WAIT',
+reason:'Need 3 rounds',
+confidence:0
+});
+
+/* safeguard prediction memory */
+if(state.predictions.length > 200){
+state.predictions.splice(0, state.predictions.length - 200);
+}
+
+return;
+
+}
+
+/* เริ่ม AI logic ตรงนี้ */
+
+let scoreP = 0;
+let scoreB = 0;
+
+/* --------------------
+MARKET PHASE DETECTOR
+-------------------- */
+
+let market = "neutral";
+
+if(history.length >= 12){
+
+const last12 = history.slice(-12);
+
+let run = 1;
+let maxRun = 1;
+let change = 0;
+
+for(let i=1;i<last12.length;i++){
+
+if(last12[i] === last12[i-1]){
+run++;
+maxRun = Math.max(maxRun, run);
+}else{
+run = 1;
+change++;
+}
+
+}
+
+/* Dragon */
+
+if(maxRun >= 5){
+market = "dragon";
+}
+
+/* Chop */
+
+else if(change >= 9){
+market = "chop";
+}
+
+/* Mixed */
+
+else{
+market = "mixed";
+}
+
+}
+
+/* --------------------
+MARKET STRATEGY
+-------------------- */
+
+if(market === "dragon"){
+
+scoreP *= 1.25;
+scoreB *= 1.25;
+
+}
+
+else if(market === "chop"){
+
+scoreP *= 1.15;
+scoreB *= 1.15;
+
+}
+
+else if(market === "mixed"){
+
+scoreP *= 0.92;
+scoreB *= 0.92;
+
+}
+
+/* --------------------
+PATTERN WEIGHT SYSTEM
+-------------------- */
+
+const TIER1 = 1.4
+const TIER2 = 1.0
+const TIER3 = 0.7
+
+const baseWeightPattern = 1.0
+const baseWeightTrend = 1.1
+const baseWeightRun = 1.2
+const baseWeightChaos = 0.8
+const baseWeightLate = 1.1
+
+
+/* --------------------
+ADAPTIVE PATTERN WEIGHT
+-------------------- */
+
+let weightPattern = baseWeightPattern;
+let weightTrend = baseWeightTrend;
+let weightRun = baseWeightRun;
+let weightChaos = baseWeightChaos;
+
+
+/* AI ปรับ weight จากฟอร์ม */
+
+if(state.dna.length >= 20){
+
+const win = state.dna.filter(v=>v).length;
+const rate = win / state.dna.length;
+
+/* ฟอร์มดี */
+
+if(rate >= 0.6){
+weightPattern *= 1.3;
+weightTrend *= 1.2;
+weightRun *= 1.15;   // 👈 เพิ่มตรงนี้
+}
+
+/* ฟอร์มตก */
+
+if(rate <= 0.45){
+weightPattern *= 0.8;
+weightTrend *= 0.9;
+weightRun *= 0.9;    // 👈 เพิ่มตรงนี้
+}
+
+}
+
+/* --------------------
+PATTERN MEMORY
+-------------------- */
+
+/* PingPong 2 Detector */
+
+if(history.length >= 4){
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PPBB'){
+scoreP += 2;
+}
+
+if(last4 === 'BBPP'){
+scoreB += 2;
+}
+}
+/* --------------------
+TRIPLE CHOP DETECTOR
+-------------------- */
+
+if(history.length >= 6){
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPPBBB'){
+scoreP += 3;
+}
+
+if(last6 === 'BBBPPP'){
+scoreB += 3;
+}
+}
+
+
+/* Triple Chop Continuation */
+
+if(history.length >= 9){
+const last9 = history.slice(-9).join('');
+
+if(last9 === 'PPPBBBPPP'){
+scoreP += 4;
+}
+
+if(last9 === 'BBBPPPBBB'){
+scoreB += 4;
+}
+}
+
+
+/* --------------------
+PATTERN 3
+-------------------- */
+
+if(history.length >= 3){
+const last3 = history.slice(-3).join('');
+
+if(last3 === 'PPP') scoreP += 2;
+if(last3 === 'BBB') scoreB += 2;
+
+if(last3 === 'PBP') scoreB += 1.5;
+if(last3 === 'BPB') scoreP += 1.5 * weightTrend;
+
+if(last3 === 'PPB') scoreP += 1;
+if(last3 === 'BBP') scoreB += 1;
+}
+
+
+/* --------------------
+DRAGON BREAK DETECTOR
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PPPPB') scoreB += 2.5;
+if(last5 === 'BBBBP') scoreP += 2.5;
+
+}
+
+
+/* --------------------
+ZIGZAG DETECTOR
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PBPBPB') scoreB += 2.5;
+if(last6 === 'BPBPBP') scoreP += 2.5;
+
+}
+/* --------------------
+FAKE CHOP → DRAGON
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7).join('');
+
+if(last7 === 'PBPBPBB') scoreB += 4;
+if(last7 === 'BPBPBPP') scoreP += 4;
+
+}
+
+/* --------------------
+CHOP BREAK MOMENTUM
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let change = 0;
+
+for(let i=1;i<last6.length;i++){
+if(last6[i] !== last6[i-1]) change++;
+}
+
+if(change >= 4){
+
+const last = history.at(-1);
+const prev = history.at(-2);
+
+if(last === prev){
+
+if(last === 'P') scoreP += 3;
+if(last === 'B') scoreB += 3;
+
+}
+
+}
+
+}
+
+
+
+/* --------------------
+RUN LENGTH MODEL
+-------------------- */
+
+let run = 1;
+
+for(let i = history.length-1; i > 0; i--){
+    if(history[i] === history[i-1]) run++;
+    else break;
+}
+
+const last = history.at(-1);
+/* --------------------
+DRAGON KILLER
+-------------------- */
+
+if(run >= 6){
+
+// dragon ยาวเกิน มีโอกาสแตก
+if(last === 'P') scoreB += 3.5;
+if(last === 'B') scoreP += 3.5;
+
+}
+
+
+/* --------------------
+DRAGON BREAK (เพิ่มตรงนี้)
+-------------------- */
+
+if(run >= 4){
+
+if(last === 'P') scoreB += 4;
+if(last === 'B') scoreP += 4;
+
+}
+
+/* --------------------
+PINGPONG ENGINE
+-------------------- */
+
+if(history.length >= 4){
+
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'BPBP' || last4 === 'PBPB'){
+
+if(last === 'P') scoreB += 3;
+if(last === 'B') scoreP += 3;
+
+}
+
+}
+
+/* --------------------
+RUN 4 BREAK DETECTOR
+-------------------- */
+
+if(run === 4){
+
+if(last === 'P') scoreB += 3;
+if(last === 'B') scoreP += 3;
+
+}
+
+
+/* run = 2 → มักจะไปต่อ */
+if(run === 2){
+    if(last === 'P') scoreP += 1;
+    if(last === 'B') scoreB += 1;
+}
+
+/* run = 3-5 → มีโอกาสกลับ */
+else if(run >= 3 && run <= 5){
+
+if(last === 'P') scoreP += 1.2;
+if(last === 'B') scoreB += 1.2;
+
+
+}
+
+/* run > 5 → Dragon continuation */
+else if(run > 5){
+    if(last === 'P') scoreP += 1;
+    if(last === 'B') scoreB += 1;
+}
+
+/* --------------------
+TREND MODEL
+-------------------- */
+
+const recent = history.slice(-6);
+
+let pCount = recent.filter(x=>x==='P').length;
+let bCount = recent.filter(x=>x==='B').length;
+
+if(pCount>bCount) scoreP +=1.5;
+if(bCount>pCount) scoreB +=1.5;
+
+
+/* --------------------
+AUTOCORRELATION STYLE
+-------------------- */
+
+if(history.length>=2){
+
+const a = history.at(-1);
+const b = history.at(-2);
+
+if(a!==b){
+if(a==='P') scoreP +=0.5;
+if(a==='B') scoreB +=0.5;
+}
+
+}
+
+/* --------------------
+MICRO CHOP DETECTOR
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PBPBP') scoreB += 2;
+if(last5 === 'BPBPB') scoreP += 2;
+
+}
+
+/* --------------------
+CHOP DETECTOR PRO
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PBPBPB'){
+scoreP += 2.8;
+}
+
+if(last6 === 'BPBPBP'){
+scoreB += 2.8;
+}
+
+}
+
+/* ⬇️ วางเพิ่มตรงนี้ */
+
+/* --------------------
+DOUBLE STREAK BREAK
+-------------------- */
+
+if(history.length >= 4){
+
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PPPB') scoreB += 2;
+if(last4 === 'BBBP') scoreP += 2;
+
+}
+
+
+
+/* --------------------
+2 CHOP PATTERN (เพิ่มตรงนี้)
+-------------------- */
+
+if(history.length >= 4){
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PBBP') scoreP += 1.5;
+if(last4 === 'BPPB') scoreB += 1.5;
+}
+
+/* --------------------
+DOUBLE PAIR REVERSAL
+-------------------- */
+
+if(history.length >= 4){
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PPBB') scoreB += 1.4;
+if(last4 === 'BBPP') scoreP += 1.4;
+}
+
+/* --------------------
+CHOP STABILITY
+-------------------- */
+
+if(history.length >= 4){
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PBPB') scoreP += 1.2;
+if(last4 === 'BPBP') scoreB += 1.2;
+}
+
+/* --------------------
+DOUBLE BREAK EXTEND
+-------------------- */
+
+if(history.length >= 5){
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PPBBP') scoreP += 1.5;
+if(last5 === 'BBPPB') scoreB += 1.5;
+}
+
+/* --------------------
+LONG TREND FORCE
+-------------------- */
+
+if(history.length >= 7){
+
+const recent7 = history.slice(-7);
+
+let p = recent7.filter(x=>x==='P').length;
+let b = recent7.filter(x=>x==='B').length;
+
+if(p >= 5) scoreP += 1.8;
+if(b >= 5) scoreB += 1.8;
+
+}
+
+/* --------------------
+TREND BREAK PRESSURE
+-------------------- */
+
+if(history.length >= 4){
+
+const last4 = history.slice(-4);
+
+let p = last4.filter(x=>x==='P').length;
+let b = last4.filter(x=>x==='B').length;
+
+if(p === 3) scoreB += 1.3;
+if(b === 3) scoreP += 1.3;
+
+}
+
+/* --------------------
+EDGE MOMENTUM
+-------------------- */
+
+if(history.length >= 8){
+
+const recent = history.slice(-8);
+
+let p = recent.filter(x=>x==='P').length;
+let b = recent.filter(x=>x==='B').length;
+
+if(p > b) scoreP += 0.9;
+if(b > p) scoreB += 0.9;
+
+}
+
+/* --------------------
+CHAOS RANDOM DETECTOR
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let change = 0;
+
+for(let i=1;i<last6.length;i++){
+if(last6[i] !== last6[i-1]) change++;
+}
+
+if(change >= 5){
+
+scoreP += 0.6;
+scoreB += 0.6;
+
+}
+
+}
+
+/* --------------------
+DOUBLE DRAGON
+-------------------- */
+
+if(history.length >= 8){
+const last8 = history.slice(-8).join('');
+
+if(last8 === 'PPPPPPBB') scoreB += 2;
+if(last8 === 'BBBBBBPP') scoreP += 2;
+}
+
+/* --------------------
+MICRO REVERSAL
+-------------------- */
+
+if(history.length >= 3){
+
+const last3 = history.slice(-3).join('');
+
+if(last3 === 'PBB') scoreP += 1.1;
+if(last3 === 'BPP') scoreB += 1.1;
+
+}
+
+/* --------------------
+STEP TREND
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5);
+
+let p = last5.filter(x=>x==='P').length;
+let b = last5.filter(x=>x==='B').length;
+
+if(p === 4) scoreP += 1.6;
+if(b === 4) scoreB += 1.6;
+
+}
+
+/* --------------------
+EDGE REVERSAL MEMORY
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let p = last6.filter(x=>x==='P').length;
+let b = last6.filter(x=>x==='B').length;
+
+if(p === 4 && b === 2) scoreB += 1.2;
+if(b === 4 && p === 2) scoreP += 1.2;
+
+}
+
+
+
+/* --------------------
+LATE TREND PUSH
+-------------------- */
+
+if(history.length >= 10){
+
+const last10 = history.slice(-10);
+
+let p = last10.filter(x=>x==='P').length;
+let b = last10.filter(x=>x==='B').length;
+
+if(p >= 7) scoreP += 2;
+if(b >= 7) scoreB += 2;
+
+}
+
+/* --------------------
+DRAGON MOMENTUM
+-------------------- */
+
+if(history.length >= 5){
+
+let run = 1;
+
+for(let i=history.length-1;i>0;i--){
+if(history[i]===history[i-1]) run++;
+else break;
+}
+
+const last = history.at(-1);
+
+if(run >= 4){
+
+if(last === 'P') scoreP += 1.4;
+if(last === 'B') scoreB += 1.4;
+
+}
+
+}
+
+scoreP = Math.min(scoreP , 15);
+scoreB = Math.min(scoreB , 15);
+if(history.length > 40){
+scoreP *= 1.05;
+scoreB *= 1.05;
+}
+/* --------------------
+MIRROR PATTERN
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPBBPP') scoreB += 2;
+if(last6 === 'BBPPBB') scoreP += 2;
+
+}
+
+
+/* --------------------
+DELAYED BREAK
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PPPPB') scoreB += 1.5;
+if(last5 === 'BBBBP') scoreP += 1.5;
+
+}
+
+
+/* --------------------
+LADDER TREND
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let run = 1;
+let ladder = false;
+
+for(let i=1;i<last6.length;i++){
+
+if(last6[i] === last6[i-1]){
+run++;
+}else{
+run = 1;
+}
+
+if(run === 2){
+ladder = true;
+}
+
+}
+
+if(ladder){
+
+if(last6.at(-1) === 'P') scoreP += 1.3;
+if(last6.at(-1) === 'B') scoreB += 1.3;
+
+}
+
+}
+
+
+/* --------------------
+COMPRESSION PATTERN
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let p = last6.filter(x=>x==='P').length;
+let b = last6.filter(x=>x==='B').length;
+
+if(p === 3 && b === 3){
+
+scoreP += 0.8;
+scoreB += 0.8;
+
+}
+
+}
+
+
+/* --------------------
+ECHO PATTERN
+-------------------- */
+
+if(history.length >= 6){
+
+const last3 = history.slice(-3).join('');
+const prev3 = history.slice(-6,-3).join('');
+
+if(last3 === prev3){
+
+if(last3.includes('P')) scoreP += 1.4;
+if(last3.includes('B')) scoreB += 1.4;
+
+}
+
+}
+
+
+/* --------------------
+REBOUND PATTERN
+-------------------- */
+
+if(history.length >= 4){
+
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PBBP') scoreP += 1.2;
+if(last4 === 'BPPB') scoreB += 1.2;
+
+}
+
+
+/* --------------------
+TRIPLE EDGE
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7);
+
+let p = last7.filter(x=>x==='P').length;
+let b = last7.filter(x=>x==='B').length;
+
+if(p === 4 && b === 3) scoreP += 1.1;
+if(b === 4 && p === 3) scoreB += 1.1;
+
+}
+
+
+/* --------------------
+REVERSE CHOP
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPBPBP') scoreB += 2;
+if(last6 === 'BBPBPB') scoreP += 2;
+
+}
+
+
+/* --------------------
+CLUSTER BREAK
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7);
+
+let run = 1;
+
+for(let i=last7.length-1;i>0;i--){
+
+if(last7[i] === last7[i-1]){
+run++;
+}else{
+break;
+}
+
+}
+
+if(run >= 3){
+
+const last = last7.at(-1);
+
+if(last === 'P') scoreB += 1.7;
+if(last === 'B') scoreP += 1.7;
+
+}
+
+}
+
+/* --------------------
+STREAK ACCELERATION
+-------------------- */
+
+if(history.length >= 5){
+
+let run=1;
+
+for(let i=history.length-1;i>0;i--){
+if(history[i]===history[i-1]) run++;
+else break;
+}
+
+const last = history.at(-1);
+
+if(run === 3){
+
+if(last === 'P') scoreP += 1.8;
+if(last === 'B') scoreB += 1.8;
+
+}
+
+}
+
+/* --------------------
+SOFT CHOP DETECTOR
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PBBPB') scoreB += 1.5;
+if(last5 === 'BPPBP') scoreP += 1.5;
+
+}
+
+/* --------------------
+MEMORY ECHO 2 LAYER
+-------------------- */
+
+if(history.length >= 8){
+
+const last4 = history.slice(-4).join('');
+const prev4 = history.slice(-8,-4).join('');
+
+if(last4 === prev4){
+
+if(last4.includes('P')) scoreP += 1.7;
+if(last4.includes('B')) scoreB += 1.7;
+
+}
+
+}
+
+/* --------------------
+RUN COLLAPSE
+-------------------- */
+
+if(history.length >= 6){
+
+let run=1;
+
+for(let i=history.length-1;i>0;i--){
+if(history[i]===history[i-1]) run++;
+else break;
+}
+
+const last = history.at(-1);
+
+if(run >= 5){
+
+if(last === 'P') scoreB += 2.2;
+if(last === 'B') scoreP += 2.2;
+
+}
+
+}
+
+/* --------------------
+TREND ECHO BREAK
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let p = last6.filter(x=>x==='P').length;
+let b = last6.filter(x=>x==='B').length;
+
+if(p === 4 && b === 2) scoreP += 1.4;
+if(b === 4 && p === 2) scoreB += 1.4;
+
+}
+
+/* --------------------
+MICRO COMPRESSION
+-------------------- */
+
+if(history.length >= 4){
+
+const last4 = history.slice(-4);
+
+let p = last4.filter(x=>x==='P').length;
+let b = last4.filter(x=>x==='B').length;
+
+if(p === 2 && b === 2){
+
+scoreP += 0.9;
+scoreB += 0.9;
+
+}
+
+}
+
+/* --------------------
+MOMENTUM FLIP
+-------------------- */
+
+if(history.length >= 3){
+
+const last3 = history.slice(-3).join('');
+
+if(last3 === 'PPB') scoreB += 1.3;
+if(last3 === 'BBP') scoreP += 1.3;
+
+}
+
+/* --------------------
+LATE SHOE REVERSAL
+-------------------- */
+
+if(history.length >= 20){
+
+const last10 = history.slice(-10);
+
+let p = last10.filter(x=>x==='P').length;
+let b = last10.filter(x=>x==='B').length;
+
+if(p >= 8) scoreB += 1.8;
+if(b >= 8) scoreP += 1.8;
+
+}
+
+/* --------------------
+DOUBLE FAKE BREAK
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPBPBB') scoreP += 1.6;
+if(last6 === 'BBPBPP') scoreB += 1.6;
+
+}
+
+/* --------------------
+SHADOW PATTERN
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7);
+
+let change = 0;
+
+for(let i=1;i<last7.length;i++){
+if(last7[i] !== last7[i-1]) change++;
+}
+
+if(change === 3){
+
+if(last7.at(-1)==='P') scoreP += 1.2;
+if(last7.at(-1)==='B') scoreB += 1.2;
+
+}
+
+}
+
+/* --------------------
+WAVE PATTERN
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPBBPP') scoreP += 1.3;
+if(last6 === 'BBPPBB') scoreB += 1.3;
+
+}
+
+/* --------------------
+TREND ACCUMULATION
+-------------------- */
+
+if(history.length >= 8){
+
+const last8 = history.slice(-8);
+
+let p = last8.filter(x=>x==='P').length;
+let b = last8.filter(x=>x==='B').length;
+
+if(p === 6) scoreP += 1.5;
+if(b === 6) scoreB += 1.5;
+
+}
+
+/* --------------------
+CHOP PRESSURE
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PBPBP') scoreP += 1.1;
+if(last5 === 'BPBPB') scoreB += 1.1;
+
+}
+
+/* --------------------
+EDGE TRAP
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5);
+
+let p = last5.filter(x=>x==='P').length;
+let b = last5.filter(x=>x==='B').length;
+
+if(p === 3 && b === 2) scoreP += 0.9;
+if(b === 3 && p === 2) scoreB += 0.9;
+
+}
+
+/* --------------------
+OFFSET ECHO
+-------------------- */
+
+if(history.length >= 7){
+
+const last3 = history.slice(-3).join('');
+const prev3 = history.slice(-7,-4).join('');
+
+if(last3 === prev3){
+
+if(last3.includes('P')) scoreP += 1.6;
+if(last3.includes('B')) scoreB += 1.6;
+
+}
+
+}
+
+/* --------------------
+ALT TREND BIAS
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let change = 0;
+
+for(let i=1;i<last6.length;i++){
+if(last6[i] !== last6[i-1]) change++;
+}
+
+if(change === 4){
+
+if(last6.at(-1) === 'P') scoreP += 1.4;
+if(last6.at(-1) === 'B') scoreB += 1.4;
+
+}
+
+}
+
+/* --------------------
+DENSITY IMBALANCE
+-------------------- */
+
+if(history.length >= 9){
+
+const last9 = history.slice(-9);
+
+let p = last9.filter(x=>x==='P').length;
+let b = last9.filter(x=>x==='B').length;
+
+if(p === 7) scoreP += 1.7;
+if(b === 7) scoreB += 1.7;
+
+}
+
+/* --------------------
+SPIRAL TREND
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7);
+
+let p = last7.filter(x=>x==='P').length;
+let b = last7.filter(x=>x==='B').length;
+
+if(p === 5 && b === 2) scoreP += 1.3;
+if(b === 5 && p === 2) scoreB += 1.3;
+
+}
+
+/* --------------------
+REVERSE LADDER
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPBPPB') scoreB += 1.6;
+if(last6 === 'BBPBBP') scoreP += 1.6;
+
+}
+
+/* --------------------
+MICRO DRIFT
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5);
+
+let p = last5.filter(x=>x==='P').length;
+let b = last5.filter(x=>x==='B').length;
+
+if(p === 3 && b === 2) scoreP += 0.7;
+if(b === 3 && p === 2) scoreB += 0.7;
+
+}
+
+/* --------------------
+EDGE FLIP
+-------------------- */
+
+if(history.length >= 4){
+
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PBPP') scoreB += 1.4;
+if(last4 === 'BPBB') scoreP += 1.4;
+
+}
+
+/* --------------------
+PHASE SHIFT
+-------------------- */
+
+if(history.length >= 8){
+
+const last8 = history.slice(-8);
+
+let change = 0;
+
+for(let i=1;i<last8.length;i++){
+if(last8[i] !== last8[i-1]) change++;
+}
+
+if(change === 2){
+
+if(last8.at(-1) === 'P') scoreP += 1.2;
+if(last8.at(-1) === 'B') scoreB += 1.2;
+
+}
+
+}
+
+/* --------------------
+MICRO CLUSTER
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5);
+
+let run = 1;
+
+for(let i=last5.length-1;i>0;i--){
+if(last5[i] === last5[i-1]) run++;
+else break;
+}
+
+if(run === 2){
+
+if(last5.at(-1) === 'P') scoreP += 0.9;
+if(last5.at(-1) === 'B') scoreB += 0.9;
+
+}
+
+}
+
+/* --------------------
+TREND STRETCH
+-------------------- */
+
+if(history.length >= 9){
+
+const last9 = history.slice(-9);
+
+let p = last9.filter(x=>x==='P').length;
+let b = last9.filter(x=>x==='B').length;
+
+if(p >= 6) scoreP += 1.4;
+if(b >= 6) scoreB += 1.4;
+
+}
+
+/* --------------------
+HALF WAVE
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PPBBP') scoreP += 1.3;
+if(last5 === 'BBPPB') scoreB += 1.3;
+
+}
+
+/* --------------------
+ALT COMPRESSION
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let p = last6.filter(x=>x==='P').length;
+let b = last6.filter(x=>x==='B').length;
+
+if(p === 4 && b === 2) scoreP += 0.8;
+if(b === 4 && p === 2) scoreB += 0.8;
+
+}
+
+/* --------------------
+RANDOM PRESSURE
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7);
+
+let change = 0;
+
+for(let i=1;i<last7.length;i++){
+if(last7[i] !== last7[i-1]) change++;
+}
+
+if(change >= 5){
+
+scoreP += 0.5;
+scoreB += 0.5;
+
+}
+
+}
+
+/* --------------------
+LATE DRIFT
+-------------------- */
+
+if(history.length >= 12){
+
+const last12 = history.slice(-12);
+
+let p = last12.filter(x=>x==='P').length;
+let b = last12.filter(x=>x==='B').length;
+
+if(p >= 8) scoreP += 1.8;
+if(b >= 8) scoreB += 1.8;
+
+}
+
+/* --------------------
+DUAL BREAK
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPBPBB') scoreB += 1.5;
+if(last6 === 'BBPBPP') scoreP += 1.5;
+
+}
+
+/* --------------------
+MICRO REVERSAL 2
+-------------------- */
+
+if(history.length >= 4){
+
+const last4 = history.slice(-4).join('');
+
+if(last4 === 'PBBB') scoreP += 1.4;
+if(last4 === 'BPPP') scoreB += 1.4;
+
+}
+
+
+/* --------------------
+TREND BALANCE
+-------------------- */
+
+if(history.length >= 10){
+
+const last10 = history.slice(-10);
+
+let p = last10.filter(x=>x==='P').length;
+let b = last10.filter(x=>x==='B').length;
+
+if(p === 5 && b === 5){
+
+scoreP += 0.7;
+scoreB += 0.7;
+
+}
+
+}
+
+/* --------------------
+EDGE SWING
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PPBPP') scoreP += 1.2;
+if(last5 === 'BBPBB') scoreB += 1.2;
+
+}
+
+/* --------------------
+TRIPLE SHIFT
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPPBBP') scoreP += 1.5;
+if(last6 === 'BBBPPB') scoreB += 1.5;
+
+}
+
+/* --------------------
+TREND EXHAUSTION
+-------------------- */
+
+if(history.length >= 8){
+
+const last8 = history.slice(-8);
+
+let run = 1;
+
+for(let i=last8.length-1;i>0;i--){
+if(last8[i] === last8[i-1]) run++;
+else break;
+}
+
+const last = last8.at(-1);
+
+if(run === 4){
+
+if(last === 'P') scoreB += 1.6;
+if(last === 'B') scoreP += 1.6;
+
+}
+
+}
+
+/* --------------------
+ASYMMETRIC LADDER
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6).join('');
+
+if(last6 === 'PPBPPP') scoreP += 1.5;
+if(last6 === 'BBPBBB') scoreB += 1.5;
+
+}
+
+/* --------------------
+DELAYED MIRROR
+-------------------- */
+
+if(history.length >= 7){
+
+const last3 = history.slice(-3).join('');
+const mirror = history.slice(-7,-4).join('');
+
+if(last3 === mirror){
+
+if(last3 === 'PPP') scoreP += 1.7;
+if(last3 === 'BBB') scoreB += 1.7;
+
+}
+
+}
+
+/* --------------------
+RUN ECHO
+-------------------- */
+
+if(history.length >= 10){
+
+const last5 = history.slice(-5);
+const prev5 = history.slice(-10,-5);
+
+if(last5.join('') === prev5.join('')){
+
+let p = last5.filter(x=>x==='P').length;
+let b = last5.filter(x=>x==='B').length;
+
+if(p > b) scoreP += 1.6;
+if(b > p) scoreB += 1.6;
+
+}
+
+}
+
+/* --------------------
+MOMENTUM DECAY
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7);
+
+let run = 1;
+
+for(let i=last7.length-1;i>0;i--){
+if(last7[i]===last7[i-1]) run++;
+else break;
+}
+
+const last = last7.at(-1);
+
+if(run === 3){
+
+if(last === 'P') scoreB += 1.2;
+if(last === 'B') scoreP += 1.2;
+
+}
+
+}
+
+/* --------------------
+ALTERNATING PRESSURE
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let change = 0;
+
+for(let i=1;i<last6.length;i++){
+if(last6[i] !== last6[i-1]) change++;
+}
+
+if(change === 5){
+
+const last = last6.at(-1);
+
+if(last === 'P') scoreP += 1.1;
+if(last === 'B') scoreB += 1.1;
+
+}
+
+}
+
+/* --------------------
+PHASE BREAK
+-------------------- */
+
+if(history.length >= 9){
+
+const last9 = history.slice(-9);
+
+let p = last9.filter(x=>x==='P').length;
+let b = last9.filter(x=>x==='B').length;
+
+if(p === 6 && b === 3) scoreB += 1.4;
+if(b === 6 && p === 3) scoreP += 1.4;
+
+}
+
+/* --------------------
+DRIFT REVERSAL
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7);
+
+let p = last7.filter(x=>x==='P').length;
+let b = last7.filter(x=>x==='B').length;
+
+if(p === 5 && b === 2) scoreB += 1.3;
+if(b === 5 && p === 2) scoreP += 1.3;
+
+}
+
+/* --------------------
+RUN BREAK MEMORY
+-------------------- */
+
+if(history.length >= 6){
+
+const last6 = history.slice(-6);
+
+let run = 1;
+
+for(let i=last6.length-1;i>0;i--){
+if(last6[i]===last6[i-1]) run++;
+else break;
+}
+
+const last = last6.at(-1);
+
+if(run === 4){
+
+if(last === 'P') scoreP += 1.1;
+if(last === 'B') scoreB += 1.1;
+
+}
+
+}
+
+/* --------------------
+OFFSET WAVE
+-------------------- */
+
+if(history.length >= 7){
+
+const last7 = history.slice(-7).join('');
+
+if(last7 === 'PPBBPBB') scoreB += 1.5;
+if(last7 === 'BBPPBPP') scoreP += 1.5;
+
+}
+
+/* --------------------
+MICRO TREND STABILIZER
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5);
+
+let p = last5.filter(x=>x==='P').length;
+let b = last5.filter(x=>x==='B').length;
+
+if(p === 3 && b === 2) scoreP += 0.6;
+if(b === 3 && p === 2) scoreB += 0.6;
+
+}
+
+/* --------------------
+RUN PRESSURE BREAK
+-------------------- */
+
+if(history.length >= 7){
+
+let run = 1;
+
+for(let i=history.length-1;i>0;i--){
+if(history[i]===history[i-1]) run++;
+else break;
+}
+
+const last = history.at(-1);
+
+if(run === 5){
+
+if(last === 'P') scoreB += 2;
+if(last === 'B') scoreP += 2;
+
+}
+
+}
+
+/* --------------------
+TREND MEMORY OFFSET
+-------------------- */
+
+if(history.length >= 12){
+
+const last6 = history.slice(-6);
+const prev6 = history.slice(-12,-6);
+
+let p1 = last6.filter(x=>x==='P').length;
+let p2 = prev6.filter(x=>x==='P').length;
+
+if(p1 === p2){
+
+if(p1 > 3) scoreP += 1.4;
+else scoreB += 1.4;
+
+}
+
+}
+
+/* --------------------
+MICRO WAVE 2
+-------------------- */
+
+if(history.length >= 5){
+
+const last5 = history.slice(-5).join('');
+
+if(last5 === 'PPBPB') scoreP += 1.2;
+if(last5 === 'BBPBP') scoreB += 1.2;
+
+}
+
+/* --------------------
+DNA PATTERN ENGINE
+-------------------- */
+
+if(state.dna.length >= 3){
+
+const last3 = state.dna.slice(-3);
+
+/* ชนะติด 3 → มีโอกาสพลาด */
+
+if(last3[0] && last3[1] && last3[2]){
+
+scoreP -= 0.6;
+scoreB -= 0.6;
+
+}
+}
+
+
+/* --------------------
+DNA ADVANCED ENGINE
+-------------------- */
+
+if(state.dna.length >= 3){
+
+const last3 = state.dna.slice(-3);
+
+/* 1️⃣ LOSS STREAK */
+
+if(!last3[0] && !last3[1] && !last3[2]){
+
+scoreP += 1.5;
+scoreB += 1.5;
+
+}
+
+}
+
+/* 2️⃣ WIN STREAK */
+
+if(state.dna.length >= 4){
+
+const last4 = state.dna.slice(-4);
+
+if(last4.every(v=>v)){
+
+scoreP -= 0.6;
+scoreB -= 0.6;
+
+}
+
+}
+
+/* 3️⃣ FLIP PATTERN */
+
+if(state.dna.length >= 6){
+
+let flip = true;
+
+const last6 = state.dna.slice(-6);
+
+for(let i=1;i<last6.length;i++){
+
+if(last6[i] === last6[i-1]){
+flip = false;
+break;
+}
+
+}
+
+if(flip){
+
+scoreP += 1;
+scoreB += 1;
+
+}
+
+}
+
+/* 4️⃣ RECOVERY PATTERN */
+
+if(state.dna.length >= 5){
+
+const last5 = state.dna.slice(-5);
+
+if(!last5[0] && !last5[1] && !last5[2] && last5[3] && last5[4]){
+
+scoreP += 1.4;
+scoreB += 1.4;
+
+}
+
+}
+
+/* 5️⃣ ACCURACY DROP */
+
+if(state.dna.length >= 6){
+
+const last6 = state.dna.slice(-6);
+
+const win = last6.filter(v=>v).length;
+
+if(win <= 1){
+
+scoreP += 1.2;
+scoreB += 1.2;
+
+}
+
+}
+
+/* 6️⃣ ACCURACY SURGE */
+
+if(state.dna.length >= 6){
+
+const last6 = state.dna.slice(-6);
+
+const win = last6.filter(v=>v).length;
+
+if(win >= 5){
+
+scoreP -= 0.5;
+scoreB -= 0.5;
+
+}
+
+}
+
+/* --------------------
+PREDICTION PATTERN DNA ENGINE
+LEVEL 5 AI
+-------------------- */
+
+if(state.predictDNA.length >= 10){
+
+let pTotal = 0, pWin = 0;
+let bTotal = 0, bWin = 0;
+
+state.predictDNA.forEach(v=>{
+
+if(v.pred === 'P'){
+pTotal++;
+if(v.win) pWin++;
+}
+
+if(v.pred === 'B'){
+bTotal++;
+if(v.win) bWin++;
+}
+
+});
+
+const pRate = pTotal ? pWin / pTotal : 0;
+const bRate = bTotal ? bWin / bTotal : 0;
+
+/* bias AI */
+
+if(pTotal >= 3 && pRate > bRate + 0.08){
+scoreP += 1.2;
+}
+
+if(bTotal >= 3 && bRate > pRate + 0.08){
+scoreB += 1.2;
+}
+
+}
+
+/* --------------------
+ENTROPY DETECTOR
+-------------------- */
+
+let entropy = 0;
+
+if(history.length >= 10){
+
+const last10 = history.slice(-10);
+
+let change = 0;
+
+for(let i=1;i<last10.length;i++){
+if(last10[i] !== last10[i-1]) change++;
+}
+
+entropy = change / 9;   // 0 - 1
+
+}
+
+/* chaos สูง */
+
+if(entropy >= 0.7){
+
+scoreP *= 0.85;
+scoreB *= 0.85;
+
+}
+
+/* entropy influence */
+
+if(entropy >= 0.75){
+
+/* chop market */
+
+scoreP *= 1.1;
+scoreB *= 1.1;
+
+}
+
+if(entropy <= 0.30){
+
+/* dragon market */
+
+scoreP *= 1.2;
+scoreB *= 1.2;
+
+}
+
+/* --------------------
+FINAL DECISION
+-------------------- */
+
+let result;
+
+if(scoreP > scoreB) result = 'P';
+else if(scoreB > scoreP) result = 'B';
+else{
+
+const parity = history.length % 2;
+result = parity ? 'P' : 'B';
+
+}
+
+/* score difference */
+
+let diff = Math.abs(scoreP - scoreB);
+
+/* base confidence */
+
+let confidence = Math.min(95, 50 + diff * 16);
+
+/* confidence stabilizer */
+
+if(diff < 0.15){
+confidence = 45;
+}
+else if(diff < 0.25){
+confidence = 50;
+}
+
+/* entropy penalty */
+
+if(entropy >= 0.7){
+confidence -= 10;
+}
+
+if(entropy >= 0.85){
+confidence -= 15;
+}
+
+/* --------------------
+AI CONFIDENCE CALIBRATION
+-------------------- */
+
+const totalDNA = state.dna.length;
+
+if(totalDNA >= 20){
+
+const win = state.dna.filter(v=>v).length;
+const rate = win / totalDNA;
+
+/* AI ฟอร์มดี */
+
+if(rate >= 0.6){
+confidence += 5;
+}
+
+/* AI ฟอร์มตก */
+
+if(rate <= 0.45){
+confidence -= 7;
+}
+
+}
+
+/* clamp confidence */
+
+confidence = Math.max(40, Math.min(95, confidence));
+
+/* push prediction */
+
+state.predictions.push({
+result,
+reason:`AI วิเคราะห์ → P:${scoreP.toFixed(2)} | B:${scoreB.toFixed(2)}`,
+confidence
+});
+
+/* safeguard prediction memory */
+
+if(state.predictions.length > 200){
+state.predictions.splice(0, state.predictions.length - 200);
+}
+
+} // ปิด generatePrediction
+
+function updateUI(){
+
+renderRoadmap();
+renderDNA();
+renderPredictDNA();
+
+/* prediction ล่าสุด */
+const cur = state.predictions.at(-1) || {result:'WAIT',reason:'',confidence:0};
+
+/* elements */
+const resultEl = document.getElementById('prediction-result');
+const reasonEl = document.getElementById('prediction-reason');
+const riskBox = document.getElementById('risk-alert');
+
+/* --------------------
+RISK DETECTOR
+-------------------- */
+
+let diff = 0;
+
+if(cur.reason){
+const m = cur.reason.match(/P:(\d+\.\d+).*B:(\d+\.\d+)/);
+if(m){
+diff = Math.abs(parseFloat(m[1]) - parseFloat(m[2]));
+}
+}
+
+/* --------------------
+RISK AI LEVEL
+-------------------- */
+
+if(cur.confidence >= 75){
+
+riskBox.classList.add("hidden");
+
+}
+else if(cur.confidence >= 60){
+
+riskBox.textContent = "⚠️ ตาเริ่มเสี่ยง AI แนะนำระวัง";
+riskBox.classList.remove("hidden");
+
+}
+else{
+
+riskBox.textContent = "🚨 ตาเสี่ยงสูง AI แนะนำให้รอ";
+riskBox.classList.remove("hidden");
+
+}
+
+/* reason + confidence */
+
+if(cur.result === 'WAIT'){
+reasonEl.textContent = "ป้อนข้อมูลเพื่อเริ่มวิเคราะห์";
+}else{
+reasonEl.textContent = `${cur.reason} | Confidence: ${cur.confidence.toFixed(1)}%`;
+}
+
+/* result text */
+
+if (cur.result === 'P') {
+
+resultEl.style.animation = 'none';
+resultEl.offsetHeight;
+resultEl.style.animation = null;
+
+resultEl.textContent = 'PLAYER';
+resultEl.className = 'prediction-result result-p';
+
+}
+else if (cur.result === 'B') {
+
+resultEl.style.animation = 'none';
+resultEl.offsetHeight;
+resultEl.style.animation = null;
+
+resultEl.textContent = 'BANKER';
+resultEl.className = 'prediction-result result-b';
+
+}
+else {
+
+resultEl.style.animation = 'none';
+resultEl.offsetHeight;
+resultEl.style.animation = null;
+
+resultEl.textContent = 'WAIT';
+resultEl.className = 'prediction-result result-wait';
+
+}
+
+/* --------------------
+BETTING STEP UPDATE
+-------------------- */
+
+const stepMainEl = document.getElementById('betting-step-main');
+const stepStatEl = document.getElementById('betting-step');
+
+if(stepMainEl){
+stepMainEl.textContent = state.currentStep;
+}
+
+if(stepStatEl){
+stepStatEl.textContent = state.currentStep;
+}
+
+/* --------------------
+STATISTICS
+-------------------- */
+
+const total = state.dna.length;
+const win = state.dna.filter(v=>v).length;
+const loss = total - win;
+
+const winEl = document.getElementById('stat-win');
+const lossEl = document.getElementById('stat-loss');
+const totalEl = document.getElementById('stat-total');
+
+if(winEl){
+winEl.textContent =
+`${win} (${total ? Math.round(win/total*100) : 0}%)`;
+}
+
+if(lossEl){
+lossEl.textContent =
+`${loss} (${total ? Math.round(loss/total*100) : 0}%)`;
+}
+
+if(totalEl){
+totalEl.textContent = total;
+}
+
+}
+
+function renderRoadmap(){
+
+const tb = document.getElementById('roadmapTable');
+tb.innerHTML = '';
+
+/* แสดงเฉพาะ history ล่าสุด 60 ตา */
+const visibleHistory = state.history.slice(-60);
+const cols = Math.max(DEFAULT_COLS, Math.ceil(visibleHistory.length / ROWS));
+
+let g = [...Array(ROWS)].map(()=>Array(cols).fill(null));
+
+visibleHistory.forEach((v,i)=>{
+g[i % ROWS][Math.floor(i / ROWS)] = v;
+});
+
+g.forEach(r=>{
+let tr = document.createElement('tr');
+
+r.forEach(c=>{
+let td = document.createElement('td');
+
+if(c){
+let d = document.createElement('div');
+d.className = 'dot ' + c;
+d.textContent = c;
+td.appendChild(d);
+}
+
+tr.appendChild(td);
+});
+
+tb.appendChild(tr);
+
+});
+
+}
+
+function renderDNA(){
+const tb=document.getElementById('dnaTable');tb.innerHTML='';
+const cols=Math.max(16,Math.ceil(state.dna.length/DNA_ROWS));
+let g=[...Array(DNA_ROWS)].map(()=>Array(cols).fill(null));
+state.dna.forEach((v,i)=>g[i%DNA_ROWS][Math.floor(i/DNA_ROWS)]=v);
+g.forEach(r=>{
+let tr=document.createElement('tr');
+r.forEach(c=>{
+let td=document.createElement('td');
+if(c!==null)td.textContent=c?'✅':'❌';
+tr.appendChild(td);
+});
+tb.appendChild(tr);
+});
+}
+
+function toggleModal(){
+
+const cur = state.predictions.at(-1);
+
+if(!cur){
+alert("ยังไม่มีข้อมูล");
+return;
+}
+
+let msg = "AI SIGNAL ANALYSIS\n\n";
+
+/* --------------------
+RESULT
+-------------------- */
+
+msg += "ผลวิเคราะห์: " + 
+(cur.result === 'P' ? "PLAYER" :
+cur.result === 'B' ? "BANKER" : "WAIT") + "\n";
+
+msg += "Confidence: " + cur.confidence.toFixed(1) + "%\n\n";
+
+/* --------------------
+WAIT STATUS
+-------------------- */
+
+if(cur.result === 'WAIT'){
+msg += "สถานะ: รอสัญญาณ\n\n";
+}
+
+/* --------------------
+STRATEGY
+-------------------- */
+
+if(cur.confidence >= 75){
+
+msg += "กลยุทธ์:\n";
+msg += "• แทงตาม AI\n";
+msg += "• ใช้ไม้ " + state.currentStep + "\n";
+msg += "• แนวโน้มชัดเจน\n";
+
+}
+
+else if(cur.confidence >= 60){
+
+msg += "กลยุทธ์:\n";
+msg += "• แทงเบา\n";
+msg += "• เล่นตามแนวโน้ม\n";
+msg += "• ระวังสลับฝั่ง\n";
+
+}
+
+else{
+
+msg += "กลยุทธ์:\n";
+msg += "• รอ 1 ตา\n";
+msg += "• ตลาดยังไม่ชัด\n";
+msg += "• หลีกเลี่ยงการแทง\n";
+
+}
+
+/* --------------------
+HISTORY
+-------------------- */
+
+if(state.history.length >= 6){
+msg += "\nHistory: " + state.history.slice(-6).join(" ");
+}
+
+/* --------------------
+ENTROPY
+-------------------- */
+
+if(typeof entropy !== "undefined"){
+msg += "\nEntropy: " + entropy.toFixed(2);
+}
+
+alert(msg);
+
+}
+
+/* --------------------
+INIT WHEN PAGE LOAD
+-------------------- */
+
+generatePrediction();
+updateUI();
+/* --------------------
+TOGGLE PASSWORD
+-------------------- */
+
+function togglePass(){
+
+const pass = document.getElementById("pass");
+
+if(pass.type === "password"){
+pass.type = "text";
+}else{
+pass.type = "password";
+}
+
+}
+
+function renderPredictDNA(){
+
+const tb = document.getElementById('predictDNA');
+const stats = document.getElementById('predictionStats');
+
+tb.innerHTML='';
+
+let pTotal=0,pWin=0;
+let bTotal=0,bWin=0;
+
+state.predictDNA.forEach(v=>{
+if(v.pred==='P'){
+pTotal++;
+if(v.win)pWin++;
+}
+if(v.pred==='B'){
+bTotal++;
+if(v.win)bWin++;
+}
+});
+
+const pRate = pTotal?((pWin/pTotal)*100).toFixed(1):0;
+const bRate = bTotal?((bWin/bTotal)*100).toFixed(1):0;
+
+stats.innerHTML=
+`P accuracy: ${pRate}% (${pWin}/${pTotal}) | B accuracy: ${bRate}% (${bWin}/${bTotal})`;
+
+const rows=4;
+const cols=Math.max(16,Math.ceil(state.predictDNA.length/rows));
+
+let grid=[...Array(rows)].map(()=>Array(cols).fill(null));
+
+state.predictDNA.forEach((v,i)=>{
+grid[i%rows][Math.floor(i/rows)]=v;
+});
+
+grid.forEach(r=>{
+let tr=document.createElement('tr');
+
+r.forEach(c=>{
+let td=document.createElement('td');
+
+if(c){
+
+td.textContent =
+c.pred + '→' + c.real;
+
+td.style.color = c.win
+? '#2ecc71'
+: '#ff4d6d';
+
+}
+
+tr.appendChild(td);
+});
+
+tb.appendChild(tr);
+});
+
+}
+
+</script>
+</body>
+</html>
